@@ -1,12 +1,23 @@
 class Payment:
+    initial_balance = 1000
+    
     def __init__(self,recipient,amount):
         self.recipient = recipient
         self.amount = amount
 
     def check_balance(self,initial):
-        return initial - self.amount
+        return Payment.initial_balance - self.amount
+    
+    @classmethod
+    def update_initial_balance(cls, new_balance):
+        cls.initial_balance = new_balance
         
-
-payment1 = Payment("A", 25)
-
-payment2 = Payment("B", 50)
+    @staticmethod
+    def check_valid_transaction(hour):
+        if 8 <= hour <= 20:
+            return True
+        
+        return False
+        
+transaction1 = Payment('A',25)
+Payment.update_initial_balance(800)
