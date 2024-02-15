@@ -2,8 +2,10 @@ import tokens
 
 class Lexer:
     digits = "0123456789"
-    operations = "+-/*()"
+    letters = "abcdefghijklmnopqrstuvwxyz"
+    operations = "+-/*()="
     stopwords = [" "]
+    declarations = ["make"]
     
     def __init__(self,text):
         self.text = text
@@ -25,6 +27,13 @@ class Lexer:
                 self.move()
                 continue
             
+            elif self.char in Lexer.letters:
+                word = self.extract_word()
+                if word in Lexer.declarations:
+                    self.token = tokens.Declarations(word)
+                else:
+                    self.token = tokens.Variable(word)
+            
             self.tokens.append(self.token)    
             
         return self.tokens
@@ -39,6 +48,14 @@ class Lexer:
             self.move()
         output = ''.join(number)
         return tokens.Integer(output) if not isFloat else tokens.Float(output)
+    
+    def extract_word(self):
+        word = []
+        while self.char in Lexer.letters and self.idx < len(self.text):
+            word.append(self.char)
+            self.move()
+        output = ''.join(word)
+        return output
 
     def move(self):
         self.idx += 1
